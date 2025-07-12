@@ -29,7 +29,7 @@ func is_full() -> bool:
 
 func clear() -> Array[Dictionary]:
 	# Возвращаем все фишки для взрыва
-	var chips = []
+	var chips: Array[Dictionary] = []
 	for slot in occupied_slots:
 		chips.append({
 			"direction": slot,
