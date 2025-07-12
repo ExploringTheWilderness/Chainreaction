@@ -255,11 +255,11 @@ func get_slot_position(center, direction, cell_size):
 			return center
 
 func next_player():
-	current_player = (current_player % num_players) + 1
-	var counts = count_chips()
-	while counts.get(current_player, 0) == 0 and has_empty_cells():
-		current_player = (current_player % num_players) + 1
-	update_status()
+        current_player = (current_player % num_players) + 1
+        var counts = count_chips()
+        while counts.get(current_player, 0) == 0 and not has_empty_cells():
+                current_player = (current_player % num_players) + 1
+        update_status()
 
 func count_chips():
 	var counts = {}
