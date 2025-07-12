@@ -215,33 +215,33 @@ func process_explosions():
 	animate_explosions(explosions)
 
 func animate_explosions(explosions):
-        if explosions.is_empty():
-                await get_tree().create_timer(0.5).timeout
-                process_explosions()
-                return
-        var cell_size = min(board_container.size.x / grid_size, board_container.size.y / grid_size)
-        var animation_data = {"completed": 0, "total": explosions.size()}
-        for explosion in explosions:
-                var chip_sprite = ColorRect.new()
-                chip_sprite.size = Vector2(20, 20)
-                chip_sprite.color = GameSettings.player_colors[explosion.player - 1]
-                var from_center = Vector2(explosion.from_pos.y * cell_size + cell_size / 2, explosion.from_pos.x * cell_size + cell_size / 2)
-                var to_center = Vector2(explosion.to_pos.y * cell_size + cell_size / 2, explosion.to_pos.x * cell_size + cell_size / 2)
-                var from_pos = get_slot_position(from_center, explosion.direction, cell_size)
-                var to_pos = get_slot_position(to_center, explosion.opposite, cell_size)
-                chip_sprite.position = from_pos - chip_sprite.size / 2
-                board_container.add_child(chip_sprite)
-                var tween = create_tween()
-                tween.tween_property(chip_sprite, "position", to_pos - chip_sprite.size / 2, 0.5)
-                tween.tween_callback(func():
-                        board[explosion.to_pos.x][explosion.to_pos.y].add_chip(explosion.opposite, explosion.player)
-                        chip_sprite.queue_free()
-                        animation_data.completed += 1
-                        if animation_data.completed >= animation_data.total:
-                                update_visual_board()
-                                await get_tree().create_timer(0.5).timeout
-                                process_explosions()
-                )
+	if explosions.is_empty():
+		await get_tree().create_timer(0.5).timeout
+		process_explosions()
+		return
+	var cell_size = min(board_container.size.x / grid_size, board_container.size.y / grid_size)
+	var animation_data = {"completed": 0, "total": explosions.size()}
+	for explosion in explosions:
+		var chip_sprite = ColorRect.new()
+		chip_sprite.size = Vector2(20, 20)
+		chip_sprite.color = GameSettings.player_colors[explosion.player - 1]
+		var from_center = Vector2(explosion.from_pos.y * cell_size + cell_size / 2, explosion.from_pos.x * cell_size + cell_size / 2)
+		var to_center = Vector2(explosion.to_pos.y * cell_size + cell_size / 2, explosion.to_pos.x * cell_size + cell_size / 2)
+		var from_pos = get_slot_position(from_center, explosion.direction, cell_size)
+		var to_pos = get_slot_position(to_center, explosion.opposite, cell_size)
+		chip_sprite.position = from_pos - chip_sprite.size / 2
+		board_container.add_child(chip_sprite)
+		var tween = create_tween()
+		tween.tween_property(chip_sprite, "position", to_pos - chip_sprite.size / 2, 0.5)
+		tween.tween_callback(func():
+			board[explosion.to_pos.x][explosion.to_pos.y].add_chip(explosion.opposite, explosion.player)
+			chip_sprite.queue_free()
+			animation_data.completed += 1
+			if animation_data.completed >= animation_data.total:
+				update_visual_board()
+				await get_tree().create_timer(0.5).timeout
+				process_explosions()
+		)
 
 func get_slot_position(center, direction, cell_size):
 	var offset = cell_size / 4
@@ -258,11 +258,11 @@ func get_slot_position(center, direction, cell_size):
 			return center
 
 func next_player():
-        current_player = (current_player % num_players) + 1
-        var counts = count_chips()
-        while counts.get(current_player, 0) == 0 and not has_empty_cells():
-                current_player = (current_player % num_players) + 1
-        update_status()
+	current_player = (current_player % num_players) + 1
+	var counts = count_chips()
+	while counts.get(current_player, 0) == 0 and not has_empty_cells():
+		current_player = (current_player % num_players) + 1
+	update_status()
 
 func count_chips():
 	var counts = {}
